@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "337460878186",
+    "project_id": "digits-and-dunes",
+    "storage_bucket": "digits-and-dunes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337460878186:android:3a75bacaf779a292bb2313",
+        "android_client_info": {
+          "package_name": "com.example.digits_and_dunes"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA41hnDEAPqaEFZ01wg6FcQ2218V6Z9Sto"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

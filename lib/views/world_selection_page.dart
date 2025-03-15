@@ -15,6 +15,10 @@ class WorldSelectionPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select World'),
+        leading: IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
+        ),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance

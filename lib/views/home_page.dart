@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../services/player_service.dart';
 import '../models/player.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import 'social_page.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,7 +57,14 @@ class _HomePageState extends State<HomePage> {
                 authViewModel.logout();
                 Navigator.pushReplacementNamed(context, '/login');
               },
-            )
+            ),
+          IconButton(
+            icon: const Icon(Icons.people),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SocialPage()),
+            ),
+          ),
         ],
       ),
       body: Center(
@@ -101,6 +110,24 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pushNamed(context, '/settings');
               },
               child: const Text('Settings'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SocialPage()),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[700],
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.people),
+                  SizedBox(width: 8),
+                  Text('Social'),
+                ],
+              ),
             ),
           ],
         ),

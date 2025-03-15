@@ -16,6 +16,7 @@ import 'views/world1.dart';
 import 'views/world2.dart';
 import 'views/world3.dart';
 import 'views/world4.dart';
+import 'views/social_page.dart';
 
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/question_viewmodel.dart';
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
           '/world2': (context) => World2Page(),
           '/world3': (context) => World3Page(),
           '/world4': (context) => World4Page(),
+          '/social': (context) => const SocialPage(),
         },
       ),
     );

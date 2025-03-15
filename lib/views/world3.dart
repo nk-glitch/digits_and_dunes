@@ -4,6 +4,7 @@ import '../widgets/level_node.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../services/player_service.dart';
 import '../views/level_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class World3Page extends StatelessWidget {
   const World3Page({super.key});
@@ -18,32 +19,43 @@ class World3Page extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("World 3"),
-        backgroundColor: Colors.orange,
+        backgroundColor: Colors.blue,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.orange.shade200, Colors.orange.shade700],
+            colors: [Colors.blue.shade200, Colors.blue.shade700],
           ),
         ),
-        child: FutureBuilder<List<int>>(
-          future: playerService.getWorldStars(authViewModel.user!.uid, worldIndex),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('players')
+              .doc(authViewModel.user!.uid)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final stars = snapshot.data!;
-            
+            Map<String, dynamic> data =
+            snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> levelStars =
+            Map<String, dynamic>.from(data['levelStars'] ?? {});
+
+            List<int> stars = List.generate(10, (level) {
+              String key = '$worldIndex-$level';
+              return levelStars[key] ?? 0;
+            });
+
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Column(
                   children: List.generate(10, (index) {
                     bool isLocked = index > 0 && stars[index - 1] == 0;
-                    
+
                     return LevelNode(
                       level: index + 1,
                       stars: stars[index],

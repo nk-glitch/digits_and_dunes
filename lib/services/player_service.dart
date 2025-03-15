@@ -50,22 +50,13 @@ class PlayerService {
       DocumentReference playerRef = _db.collection('players').doc(uid);
       String key = '$worldIndex-$levelIndex';
       
-      DocumentSnapshot doc = await playerRef.get();
-      if (!doc.exists) {
-        await createPlayer(uid, '', '');
-        doc = await playerRef.get();
-      }
-
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      // Using set with merge to ensure the update is immediate
+      await playerRef.set({
+        'levelStars': {
+          key: newStars
+        }
+      }, SetOptions(merge: true));
       
-      // Only update if new stars are higher
-      int currentStars = levelStars[key] ?? 0;
-      if (newStars > currentStars) {
-        await playerRef.update({
-          'levelStars.$key': newStars,
-        });
-      }
     } catch (e) {
       print('Error updating stars: $e');
       rethrow;

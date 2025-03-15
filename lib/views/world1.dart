@@ -4,6 +4,7 @@ import '../widgets/level_node.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../services/player_service.dart';
 import '../views/level_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class World1Page extends StatelessWidget {
   const World1Page({super.key});
@@ -28,21 +29,31 @@ class World1Page extends StatelessWidget {
             colors: [Colors.blue.shade200, Colors.blue.shade700],
           ),
         ),
-        child: FutureBuilder<List<int>>(
-          future: playerService.getWorldStars(authViewModel.user!.uid, worldIndex),
+        child: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('players')
+              .doc(authViewModel.user!.uid)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(child: CircularProgressIndicator());
             }
 
-            final stars = snapshot.data!;
+            Map<String, dynamic> data = 
+                snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> levelStars = 
+                Map<String, dynamic>.from(data['levelStars'] ?? {});
             
+            List<int> stars = List.generate(10, (level) {
+              String key = '$worldIndex-$level';
+              return levelStars[key] ?? 0;
+            });
+
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Column(
                   children: List.generate(10, (index) {
-                    // Calculate if level should be locked
                     bool isLocked = index > 0 && stars[index - 1] == 0;
                     
                     return LevelNode(
@@ -64,7 +75,7 @@ class World1Page extends StatelessWidget {
                         }
                       },
                     );
-                  }).reversed.toList(), // Reverse to show level 1 at bottom
+                  }).reversed.toList(),
                 ),
               ),
             );

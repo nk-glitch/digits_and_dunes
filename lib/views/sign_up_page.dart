@@ -15,6 +15,14 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   String? _error;
+  String? _passwordError;
+
+  void _validatePassword(String password) {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+    setState(() {
+      _passwordError = authViewModel.validatePassword(password);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +47,13 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: InputDecoration(
+                labelText: 'Password',
+                errorText: _passwordError,
+                helperText: 'Must contain uppercase, lowercase, number, and special character',
+              ),
               obscureText: true,
+              onChanged: _validatePassword,
             ),
             const SizedBox(height: 16),
             TextField(

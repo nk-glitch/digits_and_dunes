@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:digits_and_dunes/services/player_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -29,15 +30,23 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<User?> signUp(String email, String password) async {
+  Future<User?> signUp(String email, String password, String name) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+      final UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      _errorMessage = null;
+      
+      // Initialize player data in Firestore
+      await PlayerService().createPlayer(
+        userCredential.user!.uid,
+        name,
+        email,
+      );
+      
+      _user = userCredential.user;
       notifyListeners();
-      return userCredential.user;
+      return _user;
     } catch (e) {
       _errorMessage = e.toString();
       notifyListeners();

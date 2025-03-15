@@ -5,90 +5,76 @@ class LevelNode extends StatelessWidget {
   final int level;
   final int stars;
   final String difficulty;
+  final VoidCallback onTap;
+  final bool isLocked;
 
-  LevelNode({
+  const LevelNode({
+    Key? key,
     required this.level,
     required this.stars,
     required this.difficulty,
-  });
+    required this.onTap,
+    this.isLocked = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20.0),
-      child: GestureDetector(
-        onTap: () => _showLevelPopup(context),
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Colors.purpleAccent,
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 3),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 6,
-                offset: Offset(0, 3),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: isLocked ? null : onTap,
+            child: Container(
+              width: 70,
+              height: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isLocked ? Colors.grey : Colors.blue,
+                border: Border.all(color: Colors.white, width: 3),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 6,
+                    offset: Offset(0, 3),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Center(
-            child: Text(
-              "$level",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+              child: Center(
+                child: isLocked 
+                  ? const Icon(Icons.lock, color: Colors.white)
+                  : Text(
+                      level.toString(),
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _showLevelPopup(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Text("Level $level"),
-          content: Column(
+          const SizedBox(height: 8),
+          // Stars row
+          Row(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              Text("Difficulty: $difficulty", style: TextStyle(fontSize: 18)),
-              SizedBox(height: 10),
-              _buildStarDisplay(),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close the popup
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LevelPage(level: level)),
-                  );
-                },
-                child: Text("Start"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: Text("Close"),
-              ),
-            ],
+            children: List.generate(3, (index) {
+              return Icon(
+                Icons.star,
+                size: 24,
+                color: index < stars ? Colors.amber : Colors.grey[800],
+              );
+            }),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStarDisplay() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(3, (index) {
-        return Icon(
-          index < stars ? Icons.star : Icons.star_border,
-          color: Colors.yellow,
-          size: 30,
-        );
-      }),
+          Text(
+            difficulty,
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.white70,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

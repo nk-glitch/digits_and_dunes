@@ -4,9 +4,14 @@ import '../viewmodels/question_viewmodel.dart';
 import 'level_complete_screen.dart';
 
 class LevelPage extends StatelessWidget {
+  final int worldIndex;
   final int level;
 
-  const LevelPage({Key? key, required this.level}) : super(key: key);
+  const LevelPage({
+    Key? key, 
+    required this.worldIndex,
+    required this.level,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +97,8 @@ class LevelPage extends StatelessWidget {
                                 builder: (context) => LevelCompleteScreen(
                                   accuracy: accuracy,
                                   stars: stars,
+                                  worldIndex: worldIndex,
+                                  level: level,
                                 ),
                               ),
                             );

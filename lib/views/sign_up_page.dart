@@ -10,6 +10,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -21,56 +22,88 @@ class _SignUpPageState extends State<SignUpPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sign Up')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
+              controller: _nameController,
+              decoration: const InputDecoration(labelText: 'Name'),
+            ),
+            const SizedBox(height: 16),
+            TextField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
+            const SizedBox(height: 16),
             TextField(
               controller: _confirmPasswordController,
               decoration: const InputDecoration(labelText: 'Confirm Password'),
               obscureText: true,
             ),
+            const SizedBox(height: 16),
             if (_error != null)
-              Text(
-                _error!,
-                style: const TextStyle(color: Colors.red),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Text(
+                  _error!,
+                  style: const TextStyle(color: Colors.red),
+                ),
               ),
             ElevatedButton(
               onPressed: () async {
+                if (_nameController.text.trim().isEmpty) {
+                  setState(() => _error = "Please enter your name");
+                  return;
+                }
+                
                 if (_passwordController.text != _confirmPasswordController.text) {
                   setState(() => _error = "Passwords do not match");
                   return;
                 }
 
-                final user = await authViewModel.signUp(
-                  _emailController.text,
-                  _passwordController.text,
-                );
+                try {
+                  final user = await authViewModel.signUp(
+                    _emailController.text.trim(),
+                    _passwordController.text,
+                    _nameController.text.trim(),
+                  );
 
-                if (user != null) {
-                  Navigator.pushReplacementNamed(context, '/home');
-                } else {
-                  setState(() => _error = authViewModel.errorMessage);
+                  if (user != null && mounted) {
+                    Navigator.pushReplacementNamed(context, '/home');
+                  } else {
+                    setState(() => _error = authViewModel.errorMessage);
+                  }
+                } catch (e) {
+                  setState(() => _error = e.toString());
                 }
               },
               child: const Text('Sign Up'),
             ),
+            const SizedBox(height: 16),
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/login'),
+              onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
               child: const Text('Already have an account? Log in'),
             ),
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 }

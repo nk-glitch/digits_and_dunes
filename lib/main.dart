@@ -1,6 +1,10 @@
 import 'package:digits_and_dunes/views/world_selection_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart'; // If using FlutterFire CLI
+
 import 'views/home_page.dart';
 import 'views/login_page.dart';
 import 'views/sign_up_page.dart';
@@ -15,14 +19,23 @@ import 'views/world4.dart';
 
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/question_viewmodel.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart'; // If using FlutterFire CLI
+
+void _testFirebase() async {
+  try {
+    final FirebaseFirestore db = FirebaseFirestore.instance;
+    await db.collection('test').doc('test').set({'test': 'test'});
+    print('Firebase connection successful!');
+  } catch (e) {
+    print('Firebase error: $e');
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform, // Only if using FlutterFire CLI
   );
+  _testFirebase();
   runApp(const MyApp());
 }
 

@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             if (_player != null)
               Text(
-                'Welcome, ${_player!.username}!',
+                'Welcome, ${_player!.name}!',
                 style: const TextStyle(fontSize: 24),
               )
             else if (user != null)

@@ -4,6 +4,118 @@ import '../models/player.dart';
 class PlayerService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  // Create new player document
+  Future<void> createPlayer(String uid, String name, String email) async {
+    try {
+      // Instead of nested arrays, create a map with world-level keys
+      Map<String, int> levelStars = {};
+      
+      // Initialize all levels with 0 stars (4 worlds, 10 levels each)
+      for (int world = 0; world < 4; world++) {
+        for (int level = 0; level < 10; level++) {
+          // Create keys like "0-0", "0-1", "1-0", etc.
+          String key = '$world-$level';
+          levelStars[key] = 0;
+        }
+      }
+      
+      final player = {
+        'id': uid,
+        'name': name,
+        'email': email,
+        'levelStars': levelStars,
+        'worldsUnlocked': [true, false, false, false], // Only first world unlocked
+        'trophiesEarned': [false, false, false, false],
+      };
+      
+      await _db.collection('players').doc(uid).set(player);
+    } catch (e) {
+      print('Error creating player: $e');
+      rethrow;
+    }
+  }
+
+  // Get player data
+  Future<Player> getPlayer(String uid) async {
+    DocumentSnapshot doc = await _db.collection('players').doc(uid).get();
+    if (!doc.exists) {
+      throw Exception('Player not found');
+    }
+    return Player.fromFirestore(doc);
+  }
+
+  // Update level stars
+  Future<void> updateLevelStars(String uid, int worldIndex, int levelIndex, int newStars) async {
+    try {
+      DocumentReference playerRef = _db.collection('players').doc(uid);
+      String key = '$worldIndex-$levelIndex';
+      
+      DocumentSnapshot doc = await playerRef.get();
+      if (!doc.exists) {
+        await createPlayer(uid, '', '');
+        doc = await playerRef.get();
+      }
+
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      
+      // Only update if new stars are higher
+      int currentStars = levelStars[key] ?? 0;
+      if (newStars > currentStars) {
+        await playerRef.update({
+          'levelStars.$key': newStars,
+        });
+      }
+    } catch (e) {
+      print('Error updating stars: $e');
+      rethrow;
+    }
+  }
+
+  // Get stars for a specific level
+  Future<int> getLevelStars(String uid, int worldIndex, int levelIndex) async {
+    try {
+      DocumentSnapshot doc = await _db.collection('players').doc(uid).get();
+      if (!doc.exists) {
+        await createPlayer(uid, '', '');
+        return 0;
+      }
+      
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      String key = '$worldIndex-$levelIndex';
+      return levelStars[key] ?? 0;
+    } catch (e) {
+      print('Error getting level stars: $e');
+      return 0;
+    }
+  }
+
+  // Get all stars for a world
+  Future<List<int>> getWorldStars(String uid, int worldIndex) async {
+    try {
+      DocumentSnapshot doc = await _db.collection('players').doc(uid).get();
+      if (!doc.exists) {
+        await createPlayer(uid, '', '');
+        return List.filled(10, 0);
+      }
+      
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      
+      List<int> worldStars = List.filled(10, 0);
+      for (int level = 0; level < 10; level++) {
+        String key = '$worldIndex-$level';
+        worldStars[level] = levelStars[key] ?? 0;
+      }
+      
+      return worldStars;
+    } catch (e) {
+      print('Error getting world stars: $e');
+      return List.filled(10, 0);
+    }
+  }
+
   // Save player data to Firestore
   Future<void> savePlayer(Player player) async {
     try {
@@ -11,23 +123,6 @@ class PlayerService {
       print('Player saved successfully');
     } catch (e) {
       print('Error saving player: $e');
-      rethrow; // Handle the error appropriately
-    }
-  }
-
-  // Fetch player data from Firestore
-  Future<Player?> getPlayer(String playerId) async {
-    try {
-      DocumentSnapshot<Map<String, dynamic>> docSnapshot =
-      await _db.collection('players').doc(playerId).get();
-      if (docSnapshot.exists) {
-        return Player.fromFirestore(docSnapshot);
-      } else {
-        print('Player not found');
-        return null;
-      }
-    } catch (e) {
-      print('Error fetching player: $e');
       rethrow; // Handle the error appropriately
     }
   }

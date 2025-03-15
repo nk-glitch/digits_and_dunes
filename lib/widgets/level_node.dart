@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../views/level_screen.dart';
+import '../views/level_page.dart';
 
 class LevelNode extends StatelessWidget {
   final int level;
@@ -63,7 +63,7 @@ class LevelNode extends StatelessWidget {
                   Navigator.pop(context); // Close the popup
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LevelScreen(level: level)),
+                    MaterialPageRoute(builder: (context) => LevelPage(level: level)),
                   );
                 },
                 child: Text("Start"),

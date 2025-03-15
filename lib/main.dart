@@ -14,9 +14,9 @@ import 'views/world3.dart';
 import 'views/world4.dart';
 
 import 'viewmodels/auth_viewmodel.dart';
+import 'viewmodels/question_viewmodel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart'; // If using FlutterFire CLI
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,31 +31,29 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthViewModel(),
-      child: Consumer<AuthViewModel>(
-        builder: (context, authViewModel, child) {
-          return MaterialApp(
-            title: 'Digits and Dunes',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            home: const HomePage(),
-            routes: {
-              '/login': (context) => const LoginPage(),
-              '/signup': (context) => const SignUpPage(),
-              '/home': (context) => const HomePage(),
-              '/credits': (context) => const CreditsPage(),
-              '/treasure_room': (context) => const TreasureRoomPage(),
-              '/settings': (context) => const SettingsPage(),
-              '/world_select': (context) => const WorldSelectionPage(),
-              '/level_map': (context) => LevelMapScreen(),
-              '/world1': (context) => World1Page(),
-              '/world2': (context) => World2Page(),
-              '/world3': (context) => World3Page(),
-              '/world4': (context) => World4Page(),
-            },
-          );
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthViewModel()),
+      ],
+      child: MaterialApp(
+        title: 'Digits and Dunes',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomePage(),
+        routes: {
+          '/login': (context) => const LoginPage(),
+          '/signup': (context) => const SignUpPage(),
+          '/home': (context) => const HomePage(),
+          '/credits': (context) => const CreditsPage(),
+          '/treasure_room': (context) => const TreasureRoomPage(),
+          '/settings': (context) => const SettingsPage(),
+          '/world_select': (context) => const WorldSelectionPage(),
+          '/level_map': (context) => LevelMapScreen(),
+          '/world1': (context) => World1Page(),
+          '/world2': (context) => World2Page(),
+          '/world3': (context) => World3Page(),
+          '/world4': (context) => World4Page(),
         },
       ),
     );

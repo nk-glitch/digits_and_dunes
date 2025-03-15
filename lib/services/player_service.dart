@@ -5,7 +5,12 @@ class PlayerService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Create new player document
-  Future<void> createPlayer(String uid, String name, String email) async {
+  Future<void> createPlayer(
+    String uid, 
+    String name, 
+    String email, 
+    {String? profilePicUrl}
+  ) async {
     try {
       // Instead of nested arrays, create a map with world-level keys
       Map<String, int> levelStars = {};

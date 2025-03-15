@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextField(
               controller: _emailController,
@@ -38,7 +39,9 @@ class _LoginPageState extends State<LoginPage> {
                 _error!,
                 style: const TextStyle(color: Colors.red),
               ),
-            ElevatedButton(
+            const SizedBox(height: 20),
+            
+            ElevatedButton.icon(
               onPressed: () async {
                 String? error = await authViewModel.login(
                   _emailController.text,
@@ -51,12 +54,36 @@ class _LoginPageState extends State<LoginPage> {
                   setState(() => _error = error); // Keep error handling
                 }
               },
-              child: const Text('Login'),
+              icon: const Icon(Icons.login, color: Colors.white),
+              label: const Text('Login'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1877F2), // Facebook blue
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            
+            ElevatedButton.icon(
+              onPressed: () async {
+                final user = await authViewModel.signInWithFacebook();
+                if (user != null && mounted) {
+                  Navigator.pushReplacementNamed(context, '/home');
+                }
+              },
+              icon: const Icon(Icons.facebook, color: Colors.white),
+              label: const Text('Continue with Facebook'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1877F2), // Facebook blue
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
             ),
 
             TextButton(
               onPressed: () => Navigator.pushNamed(context, '/signup'),
-              child: const Text('Don’t have an account? Sign Up'),
+              child: const Text("Don't have an account? Sign Up"),
             ),
           ],
         ),

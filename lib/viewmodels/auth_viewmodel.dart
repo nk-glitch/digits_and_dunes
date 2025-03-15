@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:digits_and_dunes/services/player_service.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -172,5 +173,54 @@ class AuthViewModel extends ChangeNotifier {
 
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  Future<User?> signInWithFacebook() async {
+    try {
+      // Initiate the Facebook login
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      // Check if the login was successful
+      if (result.status == LoginStatus.success) {
+        // User is logged in
+        final AccessToken accessToken = result.accessToken!;
+
+        // Retrieve user data
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "name,email,picture.width(200)",
+        );
+
+        // Create a credential for Firebase
+        final credential = FacebookAuthProvider.credential(accessToken.tokenString);
+
+        // Sign in to Firebase with the credential
+        final userCredential = await _auth.signInWithCredential(credential);
+        
+        // Check if the user is new and create player data
+        if (userCredential.additionalUserInfo?.isNewUser ?? false) {
+          await PlayerService().createPlayer(
+            userCredential.user!.uid,
+            userData['name'] ?? 'Facebook User',
+            userData['email'] ?? '',
+            profilePicUrl: userData['picture']?['data']?['url'],
+          );
+        }
+
+        // Update the user state
+        _user = userCredential.user;
+        notifyListeners();
+        return _user;
+      } else {
+        // Handle login cancellation or failure
+        _errorMessage = result.message;
+        notifyListeners();
+        return null;
+      }
+    } catch (e) {
+      // Handle any errors during the login process
+      _errorMessage = 'Error during Facebook sign in: ${e.toString()}';
+      notifyListeners();
+      return null;
+    }
   }
 }

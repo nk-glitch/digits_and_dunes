@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Digits and Dunes</string>
+    <string name="facebook_app_id">2331886960530976</string>
+    <string name="facebook_client_token">60d6fc1f903960b3f41b84ef8c95c7df</string>
+    <string name="fb_login_protocol_scheme">fb2331886960530976</string>
+</resources>

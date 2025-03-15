@@ -1,60 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../viewmodels/auth_viewmodel.dart';
+import '../services/player_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WorldSelectionPage extends StatelessWidget {
   const WorldSelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context);
+    final playerService = PlayerService();
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Select a World')),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: const Text('Select World'),
+      ),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('players')
+            .doc(authViewModel.user!.uid)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+          List<bool> worldsUnlocked = List<bool>.from(data['worldsUnlocked'] ?? [true, false, false, false]);
+
+          return GridView.count(
+            crossAxisCount: 2,
+            padding: const EdgeInsets.all(16),
             children: [
-              const Text(
-                "Choose Your Adventure!",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: GridView.count(
-                  crossAxisCount: 2, // 2 columns
-                  shrinkWrap: true, // Prevents scroll issues
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  children: [
-                    _buildWorldButton(context, 'World 1', '/world1'),
-                    _buildWorldButton(context, 'World 2', '/world2'),
-                    _buildWorldButton(context, 'World 3', '/world3'),
-                    _buildWorldButton(context, 'World 4', '/world4'),
-                  ],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, '/home');
-                },
-                child: const Text('Back to Home'),
-              ),
+              _buildWorldCard(context, 1, Colors.blue, worldsUnlocked[0]),
+              _buildWorldCard(context, 2, Colors.green, worldsUnlocked[1]),
+              _buildWorldCard(context, 3, Colors.orange, worldsUnlocked[2]),
+              _buildWorldCard(context, 4, Colors.purple, worldsUnlocked[3]),
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
-  Widget _buildWorldButton(BuildContext context, String title, String route) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.pushNamed(context, route);
-      },
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.all(24),
-        textStyle: const TextStyle(fontSize: 18),
+  Widget _buildWorldCard(BuildContext context, int worldNumber, Color color, bool isUnlocked) {
+    return Card(
+      child: InkWell(
+        onTap: isUnlocked ? () {
+          Navigator.pushNamed(context, '/world$worldNumber');
+        } : null,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isUnlocked ? color : Colors.grey,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'World $worldNumber',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: isUnlocked ? Colors.white : Colors.white60,
+                    ),
+                  ),
+                ],
+              ),
+              if (!isUnlocked)
+                const Icon(
+                  Icons.lock,
+                  size: 48,
+                  color: Colors.white70,
+                ),
+            ],
+          ),
+        ),
       ),
-      child: Text(title),
     );
   }
 }

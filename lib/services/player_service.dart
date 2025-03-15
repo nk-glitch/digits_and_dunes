@@ -50,13 +50,40 @@ class PlayerService {
       DocumentReference playerRef = _db.collection('players').doc(uid);
       String key = '$worldIndex-$levelIndex';
       
-      // Using set with merge to ensure the update is immediate
-      await playerRef.set({
-        'levelStars': {
-          key: newStars
+      DocumentSnapshot doc = await playerRef.get();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      List<bool> worldsUnlocked = List<bool>.from(data['worldsUnlocked'] ?? [true, false, false, false]);
+
+      // Only update if new stars are higher
+      int currentStars = levelStars[key] ?? 0;
+      if (newStars > currentStars) {
+        levelStars[key] = newStars;
+        
+        // Check if all levels in current world have at least 1 star
+        bool allLevelsCompleted = true;
+        for (int level = 0; level < 10; level++) {
+          String levelKey = '$worldIndex-$level';
+          if ((levelStars[levelKey] ?? 0) == 0) {
+            allLevelsCompleted = false;
+            break;
+          }
         }
-      }, SetOptions(merge: true));
-      
+
+        // If all levels completed and not the last world, unlock next world
+        if (allLevelsCompleted && worldIndex < 3) {
+          worldsUnlocked[worldIndex + 1] = true;
+        }
+
+        // Update both stars and world unlock status
+        await playerRef.update({
+          'levelStars': levelStars,
+          'worldsUnlocked': worldsUnlocked,
+        });
+
+        // After updating stars, check for trophy eligibility
+        await checkTrophyEligibility(uid, worldIndex);
+      }
     } catch (e) {
       print('Error updating stars: $e');
       rethrow;
@@ -140,6 +167,52 @@ class PlayerService {
     } catch (e) {
       print('Error fetching players: $e');
       rethrow; // Handle the error appropriately
+    }
+  }
+
+  // Add method to check if world is unlocked
+  Future<bool> isWorldUnlocked(String uid, int worldIndex) async {
+    try {
+      DocumentSnapshot doc = await _db.collection('players').doc(uid).get();
+      if (!doc.exists) return worldIndex == 0;
+      
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      List<bool> worldsUnlocked = List<bool>.from(data['worldsUnlocked'] ?? [true, false, false, false]);
+      return worldsUnlocked[worldIndex];
+    } catch (e) {
+      print('Error checking world unlock status: $e');
+      return worldIndex == 0;
+    }
+  }
+
+  Future<void> checkTrophyEligibility(String uid, int worldIndex) async {
+    try {
+      DocumentReference playerRef = _db.collection('players').doc(uid);
+      DocumentSnapshot doc = await playerRef.get();
+      
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
+      List<bool> trophiesEarned = List<bool>.from(data['trophiesEarned'] ?? [false, false, false, false]);
+
+      // Check if all levels in the world have 3 stars
+      bool allThreeStars = true;
+      for (int level = 0; level < 10; level++) {
+        String key = '$worldIndex-$level';
+        if ((levelStars[key] ?? 0) < 3) {
+          allThreeStars = false;
+          break;
+        }
+      }
+
+      // Update trophy status if earned
+      if (allThreeStars && !trophiesEarned[worldIndex]) {
+        trophiesEarned[worldIndex] = true;
+        await playerRef.update({
+          'trophiesEarned': trophiesEarned,
+        });
+      }
+    } catch (e) {
+      print('Error checking trophy eligibility: $e');
     }
   }
 }

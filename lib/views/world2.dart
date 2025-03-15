@@ -14,11 +14,10 @@ class World2Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
-    final playerService = PlayerService();
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("World 1"),
+        title: const Text("World 2"),
         backgroundColor: Colors.blue,
       ),
       body: Container(
@@ -39,10 +38,8 @@ class World2Page extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             }
 
-            Map<String, dynamic> data =
-            snapshot.data!.data() as Map<String, dynamic>;
-            Map<String, dynamic> levelStars =
-            Map<String, dynamic>.from(data['levelStars'] ?? {});
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> levelStars = Map<String, dynamic>.from(data['levelStars'] ?? {});
 
             List<int> stars = List.generate(10, (level) {
               String key = '$worldIndex-$level';
@@ -54,6 +51,7 @@ class World2Page extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 20.0),
                 child: Column(
                   children: List.generate(10, (index) {
+                    // Check if previous level has at least 1 star
                     bool isLocked = index > 0 && stars[index - 1] == 0;
 
                     return LevelNode(
@@ -70,6 +68,14 @@ class World2Page extends StatelessWidget {
                                 worldIndex: worldIndex,
                                 level: index + 1,
                               ),
+                            ),
+                          );
+                        } else {
+                          // Show message when trying to access locked level
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Complete the previous level first!'),
+                              duration: Duration(seconds: 2),
                             ),
                           );
                         }

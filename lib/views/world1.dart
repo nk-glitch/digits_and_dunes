@@ -54,32 +54,39 @@ class World1Page extends StatelessWidget {
                     // Check if previous level has at least 1 star
                     bool isLocked = index > 0 && stars[index - 1] == 0;
                     
-                    return LevelNode(
-                      level: index + 1,
-                      stars: stars[index],
-                      difficulty: _getDifficulty(index + 1),
-                      isLocked: isLocked,
-                      onTap: () {
-                        if (!isLocked) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LevelPage(
-                                worldIndex: worldIndex,
-                                level: index + 1,
-                              ),
-                            ),
-                          );
-                        } else {
-                          // Show message when trying to access locked level
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Complete the previous level first!'),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: LevelNode(
+                            level: index + 1,
+                            stars: stars[index],
+                            difficulty: _getDifficulty(index + 1),
+                            isLocked: isLocked,
+                            onTap: () {
+                              if (!isLocked) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LevelPage(
+                                      worldIndex: worldIndex,
+                                      level: index + 1,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                // Show message when trying to access locked level
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Complete the previous level first!'),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   }).reversed.toList(),
                 ),

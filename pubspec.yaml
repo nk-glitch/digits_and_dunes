@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.3.0
   provider: ^6.1.2
   animations: ^2.0.11
+  font_awesome_flutter: ^10.0.0
   #firebase_auth: latest_version # If you need authentication (optional)
 
 

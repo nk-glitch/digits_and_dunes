@@ -4,6 +4,7 @@ import '../services/player_service.dart';
 import '../models/player.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'social_page.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -20,26 +21,26 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _loadPlayerData();
+    // _loadPlayerData();
   }
 
-  Future<void> _loadPlayerData() async {
-    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
-    final user = authViewModel.user;
-
-    if (user != null) {
-      try {
-        Player? player = await _playerService.getPlayer(user.uid);
-        if (player != null) {
-          setState(() {
-            _player = player;
-          });
-        }
-      } catch (e) {
-        print('Error fetching player: $e');
-      }
-    }
-  }
+  // Future<void> _loadPlayerData() async {
+  //   final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+  //   final user = authViewModel.user;
+  //
+  //   if (user != null) {
+  //     try {
+  //       Player? player = await _playerService.getPlayer(user.uid);
+  //       if (player != null) {
+  //         setState(() {
+  //           _player = player;
+  //         });
+  //       }
+  //     } catch (e) {
+  //       print('Error fetching player: $e');
+  //     }
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +80,15 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (_player != null)
-                Text(
-                  'Welcome, ${_player!.name}!',
-                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              if (user == null)
+                const Text(
+                  'Please log in to see your player data.',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
                 )
-              else if (user != null)
-                const CircularProgressIndicator()
               else
                 const Text(
-                  'Not logged in',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
+                  'Welcome back!',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               const SizedBox(height: 20),
               _buildCardButton(context, 'Play', Icons.play_arrow, () {
@@ -102,7 +101,7 @@ class _HomePageState extends State<HomePage> {
               _buildCardButton(context, 'Credits', Icons.star, () {
                 Navigator.pushNamed(context, '/credits');
               }),
-              _buildCardButton(context, 'Treasure Room', Icons.treasure_chest, () {
+              _buildCardButton(context, 'Treasure Room', FontAwesomeIcons.trophy, () {
                 Navigator.pushNamed(context, '/treasure_room');
               }),
               _buildCardButton(context, 'Settings', Icons.settings, () {

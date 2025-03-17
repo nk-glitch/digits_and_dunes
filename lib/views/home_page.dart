@@ -104,8 +104,11 @@ class _HomePageState extends State<HomePage> {
               _buildCardButton(context, 'Treasure Room', FontAwesomeIcons.trophy, () {
                 Navigator.pushNamed(context, '/treasure_room');
               }),
-              _buildCardButton(context, 'Settings', Icons.settings, () {
-                Navigator.pushNamed(context, '/settings');
+              // _buildCardButton(context, 'Settings', Icons.settings, () {
+              //   Navigator.pushNamed(context, '/settings');
+              // }),
+              _buildCardButton(context, 'Instructions', Icons.help, () {
+                Navigator.pushNamed(context, '/instructions');
               }),
               const SizedBox(height: 20),
               if (user != null)

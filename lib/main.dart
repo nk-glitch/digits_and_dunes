@@ -10,13 +10,14 @@ import 'views/login_page.dart';
 import 'views/sign_up_page.dart';
 import 'views/credits_page.dart';
 import 'views/treasure_room_page.dart';
-import 'views/settings_page.dart';
+// import 'views/settings_page.dart';
 import 'views/level_map_screen.dart';
 import 'views/world1.dart';
 import 'views/world2.dart';
 import 'views/world3.dart';
 import 'views/world4.dart';
 import 'views/social_page.dart';
+import 'views/instructions_page.dart';
 
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/question_viewmodel.dart';
@@ -61,7 +62,7 @@ class MyApp extends StatelessWidget {
           '/home': (context) => const HomePage(),
           '/credits': (context) => const CreditsPage(),
           '/treasure_room': (context) => const TreasureRoomPage(),
-          '/settings': (context) => const SettingsPage(),
+          // '/settings': (context) => const SettingsPage(),
           '/world_select': (context) => const WorldSelectionPage(),
           '/level_map': (context) => LevelMapScreen(),
           '/world1': (context) => World1Page(),
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
           '/world3': (context) => World3Page(),
           '/world4': (context) => World4Page(),
           '/social': (context) => const SocialPage(),
+          '/instructions': (context) => const InstructionsPage(),
         },
       ),
     );

@@ -17,15 +17,15 @@ class World4Page extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("World 4"),
-        backgroundColor: Colors.blue,
+        title: const Text("Ancient Ruins"),
+        backgroundColor: Colors.deepPurple,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade200, Colors.blue.shade700],
+            colors: [Colors.deepPurple.shade200, Colors.deepPurple.shade700],
           ),
         ),
         child: StreamBuilder<DocumentSnapshot>(

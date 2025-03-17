@@ -45,12 +45,17 @@ class LevelMapScreen extends StatelessWidget {
 
 class LevelNode extends StatelessWidget {
   final int level;
+  final bool isCompleted;
+  final bool isCurrent;
 
-  LevelNode({required this.level});
+  LevelNode({
+    required this.level,
+    this.isCompleted = false,
+    this.isCurrent = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    print("Building LevelNode for level: $level"); // Debugging statement
     final authViewModel = Provider.of<AuthViewModel>(context);
     final currentUserId = authViewModel.user!.uid;
 
@@ -65,16 +70,23 @@ class LevelNode extends StatelessWidget {
               borderRadius: BorderRadius.circular(35),
             ),
             transitionType: ContainerTransitionType.fadeThrough,
-            closedColor: Colors.pinkAccent,
+            closedColor: isCurrent ? Colors.purpleAccent : Colors.pinkAccent,
             openColor: Colors.white,
             closedBuilder: (context, action) => GestureDetector(
               onTap: action,
               child: Container(
-                width: 80,
+                width: 80, // Increased size for better touch target
                 height: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.white, width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 6,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Center(
                   child: Text(
@@ -91,6 +103,13 @@ class LevelNode extends StatelessWidget {
             openBuilder: (context, action) => LevelDetailScreen(level: level),
           ),
 
+          // Crown for completed levels
+          if (isCompleted)
+            Positioned(
+              top: -10,
+              child: Icon(Icons.emoji_events, color: Colors.yellow, size: 30),
+            ),
+
           // Display friends with 0 stars for this level
           FutureBuilder<QuerySnapshot>(
             future: FirebaseFirestore.instance
@@ -99,7 +118,6 @@ class LevelNode extends StatelessWidget {
                 .get(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                print("No data found for friendships"); // Debugging statement
                 return const SizedBox.shrink();
               }
 
@@ -113,7 +131,6 @@ class LevelNode extends StatelessWidget {
                   future: FirebaseFirestore.instance.collection('players').doc(friendId).get(),
                   builder: (context, friendSnapshot) {
                     if (!friendSnapshot.hasData || !friendSnapshot.data!.exists) {
-                      print("Friend data not found for ID: $friendId"); // Debugging statement
                       return const SizedBox.shrink();
                     }
 

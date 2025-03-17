@@ -17,15 +17,15 @@ class World1Page extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("World 1"),
-        backgroundColor: Colors.blue,
+        title: const Text("Desert Mirage"),
+        backgroundColor: Colors.orangeAccent,
       ),
       body: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade200, Colors.blue.shade700],
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.orange.shade200, Colors.orange.shade700],
           ),
         ),
         child: StreamBuilder<DocumentSnapshot>(

@@ -17,15 +17,15 @@ class World2Page extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("World 2"),
-        backgroundColor: Colors.blue,
+        title: const Text("Oasis Haven"),
+        backgroundColor: Colors.teal,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue.shade200, Colors.blue.shade700],
+            colors: [Colors.teal.shade200, Colors.teal.shade700],
           ),
         ),
         child: StreamBuilder<DocumentSnapshot>(

@@ -67,81 +67,93 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (_player != null)
-              Text(
-                'Welcome, ${_player!.name}!',
-                style: const TextStyle(fontSize: 24),
-              )
-            else if (user != null)
-              const CircularProgressIndicator()
-            else
-              const Text(
-                'Not logged in',
-                style: TextStyle(fontSize: 18, color: Colors.red),
-              ),
-            ElevatedButton(
-              onPressed: () {
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.orange.shade200, Colors.orange.shade700],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (_player != null)
+                Text(
+                  'Welcome, ${_player!.name}!',
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                )
+              else if (user != null)
+                const CircularProgressIndicator()
+              else
+                const Text(
+                  'Not logged in',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
+              const SizedBox(height: 20),
+              _buildCardButton(context, 'Play', Icons.play_arrow, () {
                 if (user != null) {
                   Navigator.pushNamed(context, '/world_select');
                 } else {
                   Navigator.pushNamed(context, '/login');
                 }
-              },
-              child: const Text('Play'),
-            ),
-            ElevatedButton(
-              onPressed: () {
+              }),
+              _buildCardButton(context, 'Credits', Icons.star, () {
                 Navigator.pushNamed(context, '/credits');
-              },
-              child: const Text('Credits'),
-            ),
-            ElevatedButton(
-              onPressed: () {
+              }),
+              _buildCardButton(context, 'Treasure Room', Icons.treasure_chest, () {
                 Navigator.pushNamed(context, '/treasure_room');
-              },
-              child: const Text('Treasure Room'),
-            ),
-            ElevatedButton(
-              onPressed: () {
+              }),
+              _buildCardButton(context, 'Settings', Icons.settings, () {
                 Navigator.pushNamed(context, '/settings');
-              },
-              child: const Text('Settings'),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SocialPage()),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue[700],
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-              ),
-              child: const Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.people),
-                  SizedBox(width: 8),
-                  Text('Social'),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (user != null)
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    'Logged in as: ${user.displayName ?? user.email}',
-                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+              }),
+              const SizedBox(height: 20),
+              if (user != null)
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      'Logged in as: ${user.displayName ?? user.email}',
+                      style: const TextStyle(fontSize: 16, color: Colors.white70),
+                    ),
                   ),
                 ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardButton(BuildContext context, String title, IconData icon, VoidCallback onPressed) {
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      elevation: 5,
+      child: InkWell(
+        onTap: onPressed,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            gradient: LinearGradient(
+              colors: [Colors.blue.shade300, Colors.blue.shade600],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white),
+              const SizedBox(width: 10),
+              Text(
+                title,
+                style: const TextStyle(fontSize: 20, color: Colors.white),
               ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -13,15 +13,15 @@ class TreasureRoomPage extends StatelessWidget {
     // Check if the user is logged in
     if (authViewModel.user == null) {
       // Redirect to login page or show a message
-      return Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: const Text('Treasure Room'),
           backgroundColor: Colors.amber[700],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
               const Text('You need to be logged in to access this page.'),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -180,7 +180,7 @@ class TreasureRoomPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(Icons.star, color: Colors.amber, size: 14),
                           Icon(Icons.star, color: Colors.amber, size: 14),

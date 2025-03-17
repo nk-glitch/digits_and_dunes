@@ -28,9 +28,9 @@ class LevelPage extends StatelessWidget {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: questionViewModel.questions.length,
-                    itemBuilder: (context, index) {
-                      final question = questionViewModel.questions[index];
+              itemCount: questionViewModel.questions.length,
+              itemBuilder: (context, index) {
+                final question = questionViewModel.questions[index];
                       final selectedAnswer = questionViewModel.selectedAnswers[index];
 
                       return Card(

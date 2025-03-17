@@ -21,10 +21,10 @@ class World1Page extends StatelessWidget {
         backgroundColor: Colors.blue,
       ),
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
             colors: [Colors.blue.shade200, Colors.blue.shade700],
           ),
         ),

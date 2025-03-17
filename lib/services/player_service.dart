@@ -28,6 +28,7 @@ class PlayerService {
         'id': uid,
         'name': name,
         'email': email,
+        'profilePicUrl': profilePicUrl,
         'levelStars': levelStars,
         'worldsUnlocked': [true, false, false, false], // Only first world unlocked
         'trophiesEarned': [false, false, false, false],

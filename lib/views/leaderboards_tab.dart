@@ -137,9 +137,8 @@ Widget _buildLeaderboardList(List<Map<String, dynamic>> rankings) {
         itemCount: rankings.length,
         itemBuilder: (context, index) {
           final player = rankings[index];
-          final rank = index + 1;
           final isCurrentUser = player['id'] == currentUserId;
-          
+
           return Container(
             decoration: isCurrentUser ? BoxDecoration(
               color: Colors.blue.withOpacity(0.1),
@@ -151,7 +150,11 @@ Widget _buildLeaderboardList(List<Map<String, dynamic>> rankings) {
               ),
             ) : null,
             child: ListTile(
-              leading: _buildRankWidget(rank),
+              leading: CircleAvatar(
+                backgroundImage: player['profilePicUrl'] != null 
+                    ? NetworkImage(player['profilePicUrl']) 
+                    : const AssetImage('assets/default_profile_pic.jpg') as ImageProvider, // Default image if no URL
+              ),
               title: Row(
                 children: [
                   Text(

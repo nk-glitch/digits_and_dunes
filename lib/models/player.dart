@@ -4,6 +4,7 @@ class Player {
   final String id;
   final String name;
   final String email;
+  final String? profilePicUrl;
   final List<List<int>> levelStars; // Stars for each level in each world
   final List<bool> worldsUnlocked;
   final List<bool> trophiesEarned;
@@ -12,6 +13,7 @@ class Player {
     required this.id,
     required this.name,
     required this.email,
+    this.profilePicUrl,
     List<List<int>>? levelStars,
     List<bool>? worldsUnlocked,
     List<bool>? trophiesEarned,
@@ -57,6 +59,7 @@ class Player {
       id: doc.id,
       name: data['name'] ?? '',
       email: data['email'] ?? '',
+      profilePicUrl: data['profilePicUrl'] as String?,
       levelStars: stars,
       worldsUnlocked: (data['worldsUnlocked'] as List).map((e) => e as bool).toList(),
       trophiesEarned: (data['trophiesEarned'] as List).map((e) => e as bool).toList(),

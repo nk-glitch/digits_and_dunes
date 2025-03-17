@@ -10,6 +10,32 @@ class TreasureRoomPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
 
+    // Check if the user is logged in
+    if (authViewModel.user == null) {
+      // Redirect to login page or show a message
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Treasure Room'),
+          backgroundColor: Colors.amber[700],
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('You need to be logged in to access this page.'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login'); // Redirect to login
+                },
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Treasure Room'),
@@ -106,8 +132,8 @@ class TreasureRoomPage extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) {
               return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   SizedBox(
                     height: constraints.maxHeight * 0.5,
                     child: Stack(
@@ -154,7 +180,7 @@ class TreasureRoomPage extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: const [
                           Icon(Icons.star, color: Colors.amber, size: 14),
                           Icon(Icons.star, color: Colors.amber, size: 14),

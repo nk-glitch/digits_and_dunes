@@ -129,6 +129,18 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            const SizedBox(height: 20),
+            if (user != null)
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Logged in as: ${user.displayName ?? user.email}',
+                    style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

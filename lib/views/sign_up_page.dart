@@ -101,6 +101,22 @@ class _SignUpPageState extends State<SignUpPage> {
               child: const Text('Sign Up'),
             ),
             const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () async {
+                final user = await authViewModel.signInWithFacebook();
+                if (user != null && mounted) {
+                  Navigator.pushReplacementNamed(context, '/home');
+                }
+              },
+              icon: const Icon(Icons.facebook, color: Colors.white),
+              label: const Text('Continue with Facebook'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1877F2), // Facebook blue
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              ),
+            ),
+            const SizedBox(height: 16),
             TextButton(
               onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
               child: const Text('Already have an account? Log in'),

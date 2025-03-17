@@ -11,7 +11,30 @@ class SocialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authViewModel = Provider.of<AuthViewModel>(context);
-    final currentUserId = authViewModel.user!.uid;
+    final currentUserId = authViewModel.user?.uid;
+
+    // Check if the user is logged in
+    if (currentUserId == null) {
+      // Redirect to login page or show a message
+      return Scaffold(
+        appBar: AppBar(title: const Text('Social')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('You need to be logged in to access this page.'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/login'); // Redirect to login
+                },
+                child: const Text('Login'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return DefaultTabController(
       length: 2,

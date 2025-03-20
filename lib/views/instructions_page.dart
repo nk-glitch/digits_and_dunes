@@ -20,17 +20,17 @@ class InstructionsPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Text(
-              '1. Objective: Complete levels by answering questions correctly.',
+              '1. Play Button: Takes you to the world select page where you can choose to play in any unlocked world.',
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 10),
             const Text(
-              '2. Scoring: Earn stars based on your accuracy.',
+              '2. World Map: Play and unlock levels starting from the very first one! Earn stars based on your accuracy. Getting 3 stars on every level in a world earns you a special trophy. You can see what level friends currently are on aswell.',
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 10),
             const Text(
-              '3. Unlock Worlds: Complete levels to unlock new worlds.',
+              '3. Social Tab: Complete levels to unlock new worlds.',
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 10),

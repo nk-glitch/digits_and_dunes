@@ -110,6 +110,10 @@ class _HomePageState extends State<HomePage> {
               _buildCardButton(context, 'Instructions', Icons.help, () {
                 Navigator.pushNamed(context, '/instructions');
               }),
+              _buildCardButton(context, 'Social', Icons.people, () {
+                Navigator.pushNamed(context, '/social');
+              }),
+
               const SizedBox(height: 20),
               if (user != null)
                 Align(

@@ -223,4 +223,12 @@ class AuthViewModel extends ChangeNotifier {
       return null;
     }
   }
+
+  // Add method to check if user is logged in with Facebook
+  bool get isLoggedInWithFacebook {
+    return _user?.providerData.any((userInfo) => 
+      userInfo.providerId == 'facebook.com') ?? false;
+  }
+
+
 }

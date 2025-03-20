@@ -4,7 +4,7 @@ import '../models/player.dart';
 class PlayerService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  // Create new player document
+  // new player document
   Future<void> createPlayer(
     String uid, 
     String name, 
@@ -12,7 +12,7 @@ class PlayerService {
     {String? profilePicUrl}
   ) async {
     try {
-      // Instead of nested arrays, create a map with world-level keys
+      // create a map with world-level keys
       Map<String, int> levelStars = {};
       
       // Initialize all levels with 0 stars (4 worlds, 10 levels each)

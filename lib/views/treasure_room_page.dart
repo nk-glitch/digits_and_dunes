@@ -179,12 +179,17 @@ class TreasureRoomPage extends StatelessWidget {
                   if (isEarned)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Icon(Icons.star, color: Colors.amber, size: 14),
-                          Icon(Icons.star, color: Colors.amber, size: 14),
-                          Icon(Icons.star, color: Colors.amber, size: 14),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.star, color: Colors.amber, size: 14),
+                              Icon(Icons.star, color: Colors.amber, size: 14),
+                              Icon(Icons.star, color: Colors.amber, size: 14),
+                            ],
+                          ),
+                          
                         ],
                       ),
                     ),
